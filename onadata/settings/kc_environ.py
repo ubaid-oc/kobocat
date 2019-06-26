@@ -236,7 +236,13 @@ if (os.getenv("RAVEN_DSN") or "") != "":
                     'level': 'DEBUG',
                     'class': 'logging.StreamHandler',
                     'formatter': 'verbose'
-                }
+                },
+                'audit': {
+                    'level': 'DEBUG',
+                    'class': 'onadata.libs.utils.log.AuditLogHandler',
+                    'formatter': 'verbose',
+                    'model': 'onadata.apps.main.models.audit.AuditLog'
+                },
             },
             'loggers': {
                 'django.db.backends': {
@@ -258,6 +264,11 @@ if (os.getenv("RAVEN_DSN") or "") != "":
                     'level': 'DEBUG',
                     'handlers': ['console'],
                     'propagate': False,
+                },
+                'audit_logger': {
+                    'handlers': ['audit'],
+                    'level': 'DEBUG',
+                    'propagate': True
                 },
             },
         }
