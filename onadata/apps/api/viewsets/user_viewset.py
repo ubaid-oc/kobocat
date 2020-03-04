@@ -60,6 +60,7 @@ This endpoint allows you to list and retrieve user's first and last names.
     # a custom url routing on the fly. Basically it will be added in the
     # url regex.
     lookup_field = 'username'
+    lookup_value_regex = '[^/]+'
 
     def get_object(self):
         """Lookup a  username by pk else use lookup_field"""

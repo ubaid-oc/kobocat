@@ -134,6 +134,7 @@ curl -X PATCH -d '{"country": "KE"}' https://example.com/api/v1/profiles/demo \
     # a custom url routing on the fly. Basically it will be added in the
     # url regex.
     lookup_field = 'user'
+    lookup_value_regex = '[^/]+'
 
     def get_object(self):
         """Lookup user profile by pk or username"""
