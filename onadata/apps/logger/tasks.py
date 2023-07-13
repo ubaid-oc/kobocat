@@ -3,23 +3,31 @@ import csv
 import datetime
 import zipfile
 from collections import defaultdict
+from datetime import timedelta
 from io import StringIO
 
-from celery import task, shared_task
+from celery import shared_task
 from dateutil import relativedelta
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import get_storage_class
 from django.core.management import call_command
+from django.utils import timezone
 
-from .models.submission_counter import SubmissionCounter
+from onadata.celery import app
+from .models.daily_xform_submission_counter import DailyXFormSubmissionCounter
 from .models import Instance, XForm
 
 
-@task()
-def create_monthly_counters():
-    user_ids = User.objects.values_list('pk', flat=True)
-    for user_id in user_ids:
-        SubmissionCounter.objects.create(user_id=user_id)
+@app.task()
+def delete_daily_counters():
+    today = timezone.now().date()
+    delta = timedelta(days=settings.DAILY_COUNTERS_MAX_DAYS)
+    rel_date = today - delta
+    xform_daily_counters = DailyXFormSubmissionCounter.objects.filter(
+        date__lte=rel_date
+    )
+    xform_daily_counters.delete()
 
 
 # ## ISSUE 242 TEMPORARY FIX ##
@@ -36,7 +44,7 @@ def fix_root_node_names(**kwargs):
 # #### END ISSUE 242 FIX ######
 
 
-@shared_task
+@shared_task(soft_time_limit=3600, time_limit=3630)
 def generate_stats_zip(output_filename):
     # Limit to last month and this month
     now = datetime.datetime.now()

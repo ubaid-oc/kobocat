@@ -4,7 +4,6 @@ import os
 import re
 import time
 from datetime import datetime
-from urllib.parse import unquote
 
 import requests
 import rest_framework.views as rest_framework_views
@@ -18,7 +17,8 @@ from django.http import (
     HttpResponseNotFound,
     HttpResponseRedirect,
 )
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as t
+from kobo_service_account.utils import get_real_user
 from rest_framework import exceptions
 from rest_framework.authtoken.models import Token
 from rest_framework.request import Request
@@ -64,18 +64,23 @@ def publish_xlsform(request, user, existing_xform=None):
     If `existing_xform` is specified, that form will be overwritten with the
     new XLSForm
     """
-    if not request.user.has_perm(
-        'can_add_xform',
-        UserProfile.objects.get_or_create(user=user)[0]
+    if (
+        not request.user.is_superuser
+        and not request.user.has_perm(
+            'can_add_xform', UserProfile.objects.get_or_create(user=user)[0]
+        )
     ):
         raise exceptions.PermissionDenied(
-            detail=_("User %(user)s has no permission to add xforms to "
+            detail=t("User %(user)s has no permission to add xforms to "
                      "account %(account)s" % {'user': request.user.username,
                                               'account': user.username}))
-    if existing_xform and not request.user.has_perm(
-            'change_xform', existing_xform):
+    if (
+        existing_xform
+        and not request.user.is_superuser
+        and not request.user.has_perm('change_xform', existing_xform)
+    ):
         raise exceptions.PermissionDenied(
-            detail=_("User %(user)s has no permission to change this "
+            detail=t("User %(user)s has no permission to change this "
                      "form." % {'user': request.user.username, })
         )
 
@@ -99,7 +104,7 @@ def get_xform(formid, request, username=None):
         xform = check_and_set_form_by_id(int(formid), request)
 
     if not xform:
-        raise exceptions.PermissionDenied(_(
+        raise exceptions.PermissionDenied(t(
             "You do not have permission to view data from this form."))
 
     return xform
@@ -145,9 +150,10 @@ def add_validation_status_to_instance(
 
     # Payload must contain validation_status property.
     if validation_status_uid:
-
+        real_user = get_real_user(request)
         validation_status = get_validation_status(
-            validation_status_uid, instance.xform, request.user.username)
+            validation_status_uid, instance.xform, real_user.username
+        )
         if validation_status:
             instance.validation_status = validation_status
             instance.save()
