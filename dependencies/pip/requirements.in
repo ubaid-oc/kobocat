@@ -77,7 +77,7 @@ redis
 django-guardian
 django-timezone-field
 django-celery-beat
-django-oauth-toolkit
+django-oauth-toolkit==1.2.0
 
 # Added packages
 simplejson

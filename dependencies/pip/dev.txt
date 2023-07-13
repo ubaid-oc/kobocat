@@ -82,7 +82,7 @@ django-guardian==2.3.0
     #   djangorestframework-guardian
 django-nose==1.4.7
     # via -r dependencies/pip/dev.in
-django-oauth-toolkit==1.3.2
+django-oauth-toolkit==1.2.0
     # via -r dependencies/pip/requirements.in
 django-pure-pagination==0.3.0
     # via -r dependencies/pip/requirements.in

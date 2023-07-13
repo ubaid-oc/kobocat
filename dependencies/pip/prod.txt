@@ -72,7 +72,7 @@ django-guardian==2.3.0
     # via
     #   -r dependencies/pip/requirements.in
     #   djangorestframework-guardian
-django-oauth-toolkit==1.3.2
+django-oauth-toolkit==1.2.0
     # via -r dependencies/pip/requirements.in
 django-pure-pagination==0.3.0
     # via -r dependencies/pip/requirements.in
