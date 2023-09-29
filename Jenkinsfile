@@ -45,7 +45,7 @@ pipeline {
                         docker buildx create --name multiarchbuilder --append --node arm64 --platform linux/arm64 tcp://127.0.0.1:1337 --driver docker-container --driver-opt env.BUILDKIT_STEP_LOG_MAX_SIZE=10000000 --driver-opt env.BUILDKIT_STEP_LOG_MAX_SPEED=10000000
                         docker buildx inspect --bootstrap --builder multiarchbuilder
                        """
-                    sh "docker buildx build --builder multiarchbuilder --platform linux/amd64,linux/aarch64 -t ${registry}:${tag_version}--push ."
+                    sh "docker buildx build --builder multiarchbuilder --platform linux/amd64,linux/aarch64 -t ${registry}:${tag_version} --push ."
                   }
                 }
                 else {
