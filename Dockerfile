@@ -1,4 +1,4 @@
-FROM ahilman/kobocat_base:latest
+FROM 837577998611.dkr.ecr.us-west-2.amazonaws.com/kobotoolbox/kobocat_base:latest
 
 ENV KOBOCAT_SRC_DIR=/srv/src/kobocat \
     BACKUPS_DIR=/srv/backups \
