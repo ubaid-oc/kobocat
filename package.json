@@ -1,6 +1,6 @@
 {
   "name": "kobocat",
-  "version": "oc-1.0.0",
+  "version": "oc-1.1.0",
   "description": "form designer service",
   "dependencies": {},
   "devDependencies": {
