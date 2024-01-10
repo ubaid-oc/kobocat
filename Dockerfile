@@ -55,6 +55,7 @@ RUN apt-get -qq update && \
         libproj-dev \
         libsqlite3-mod-spatialite \
         locales \
+        ca-certificates-java \
         openjdk-11-jre \
         postgresql-client \
         python3-virtualenv \
