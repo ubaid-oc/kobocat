@@ -42,14 +42,6 @@ TEST_USERNAME = 'bob'
 # GitHub Actions env. variables are set within `./github/workflows/pytest.yml`
 USE_POSTGRESQL = os.getenv('USE_POSTGRESQL', False)
 
-if not USE_POSTGRESQL:
-    # Need to add these lines to make the tests run with SQLite
-    # Moreover, `apt-get update && apt-get install libsqlite3-mod-spatialite`
-    # should be executed inside the container
-    DATABASES['default']['ENGINE'] = "django.contrib.gis.db.backends.spatialite"
-    SPATIALITE_LIBRARY_PATH = os.environ.get('SPATIALITE_LIBRARY_PATH',
-                                             'mod_spatialite')
-
 SERVICE_ACCOUNT['WHITELISTED_HOSTS'] = ['testserver']
 SERVICE_ACCOUNT['NAMESPACE'] = 'kobo-service-account-test'
 

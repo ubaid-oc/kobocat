@@ -8,9 +8,7 @@ except ImportError:
 
 import reversion
 from django.contrib.auth.models import User
-from django.contrib.gis.db import models
-from django.contrib.gis.geos import GeometryCollection, Point
-from django.db import models as django_models, transaction
+from django.db import models, transaction
 from django.db.models import Case, F, When
 from django.db.models.signals import post_delete
 from django.db.models.signals import post_save
@@ -251,9 +249,6 @@ class Instance(models.Model):
                               default='submitted_via_web')
     uuid = models.CharField(max_length=249, default='', db_index=True)
 
-    # store an geographic objects associated with this instance
-    geom = models.GeometryCollectionField(null=True)
-
     tags = TaggableManager()
 
     validation_status = JSONField(null=True, default=None)
@@ -294,27 +289,6 @@ class Instance(models.Model):
             return
         if profile.metadata.get('submissions_suspended', False):
             raise TemporarilyUnavailableError()
-
-    def _set_geom(self):
-        xform = self.xform
-        data_dictionary = xform.data_dictionary()
-        geo_xpaths = data_dictionary.geopoint_xpaths()
-        doc = self.get_dict()
-        points = []
-
-        if len(geo_xpaths):
-            for xpath in geo_xpaths:
-                geometry = [float(s) for s in doc.get(xpath, '').split()]
-
-                if len(geometry):
-                    lat, lng = geometry[0:2]
-                    points.append(Point(lng, lat))
-
-            if not xform.instances_with_geopoints and len(points):
-                xform.instances_with_geopoints = True
-                xform.save()
-
-            self.geom = GeometryCollection(points)
 
     def _set_json(self):
         doc = self.get_dict()
