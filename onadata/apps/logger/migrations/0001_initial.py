@@ -1,4 +1,5 @@
 # coding: utf-8
+import django.contrib.gis.db.models.fields
 import jsonfield.fields
 import taggit.managers
 from django.conf import settings
@@ -34,7 +35,8 @@ class Migration(migrations.Migration):
                 ('date_modified', models.DateTimeField(auto_now=True)),
                 ('deleted_at', models.DateTimeField(default=None, null=True)),
                 ('status', models.CharField(default='submitted_via_web', max_length=20)),
-                ('uuid', models.CharField(default='', max_length=249))
+                ('uuid', models.CharField(default='', max_length=249)),
+                ('geom', django.contrib.gis.db.models.fields.GeometryCollectionField(srid=4326, null=True)),
             ],
         ),
         migrations.CreateModel(
