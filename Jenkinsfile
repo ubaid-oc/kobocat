@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 cleanWs()
-                checkout scmGit(branches: [[name: '*/$release_branch'']], extensions: [], userRemoteConfigs: [[credentialsId: 'aventior-github-ishan', url: 'https://github.com/ishanavnt-01/kobocat.git']])
+                checkout scmGit(branches: [[name: '*/$release_branch']], extensions: [], userRemoteConfigs: [[credentialsId: 'aventior-github-ishan', url: 'https://github.com/ishanavnt-01/kobocat.git']])
             }
         }
         stage('Fetch ECR Credentials') {
