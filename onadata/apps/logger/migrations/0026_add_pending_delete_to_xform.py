@@ -8,7 +8,7 @@ import onadata.apps.logger.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('logger', '0025_delete_submissioncounter'),
+        ('logger', '0025_oc_remove_instance_geom'),
     ]
 
     operations = [
