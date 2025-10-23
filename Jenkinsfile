@@ -74,7 +74,7 @@ pipeline {
 		script {
                 if ( env.ENV == "build & deploy" || env.ENV == "deploy" )
                 {    
-                sh "https_proxy=socks5://127.0.0.1:1095 /usr/local/bin/helm upgrade formdesigner --install apps/kobo_kpi --namespace ${ns} --set kobocat.image.repository=${registry} --set kobocat.image.tag=${tag_version}"
+                sh "https_proxy=socks5://127.0.0.1:1095 /usr/local/bin/helm upgrade formdesigner --install apps/kobo_kpi --values apps/kobo_kpi/values-dev.yaml --namespace ${ns} --set kobocat.image.repository=${registry} --set kobocat.image.tag=${tag_version}"
                 }
                 else {
                 sh "echo 'Skipping this step'" 
